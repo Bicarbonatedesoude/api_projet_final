@@ -1,6 +1,6 @@
 
 
-const bd = require('../.src/config/db.js');
+const bd = require('../.src/config/db_pg.js');
 
 module.exports = {};
 

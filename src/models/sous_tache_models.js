@@ -1,4 +1,4 @@
-const sql = require('..config/db.js');
+const sql = require('..config/db_pg.js');
 
 const SousTache = function(sous_tache) {
     this.tache_id = sous_tache.tache_id;

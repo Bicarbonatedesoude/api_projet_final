@@ -1,5 +1,5 @@
 
-const sql = require('../config/db.js');
+const sql = require('../config/db_pg.js');
 const bcrypt = require('bcrypt');
 const costFactor = 10;
 const uuidv4 = require('uuid/v4');

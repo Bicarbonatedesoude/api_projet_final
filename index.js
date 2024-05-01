@@ -21,7 +21,7 @@ app.use(morgan('combined', {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: rue }));
-const db = require("./.src/config/db.js");
+const db = require("./.src/config/db_pg.js");
 
 //initier swagger-ui + DOCUMENTATIONS
 const swaggerUi = require('swagger-ui-express');
