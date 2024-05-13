@@ -12,6 +12,7 @@ const Utilisateur = function(utilisateur) {
     this.password = utilisateur.password;
 };
 
+// Fonction pour valider une clé API
 Utilisateur.ajouter_Util = (req) => {
     return new Promise((resolve, reject) => {
         bcrypt.hash(req.body.password, costFactor, (err, hash) => {
@@ -43,7 +44,7 @@ function generateUniqueAPIKey() {
     return cle; 
 }
 
-
+// Fonction pour valider une clé API
 Utilisateur.verifUtilisateur = (req, res) => {
     return new Promise((resolve, reject) => {
         let requete = 'SELECT * FROM utilisateur WHERE courriel = $1';
@@ -57,6 +58,7 @@ Utilisateur.verifUtilisateur = (req, res) => {
     });
 };
 
+// Fonction pour valider une clé API
 Utilisateur.cree_Cle = (req, res) => {
     return new Promise((resolve, reject) => {
         let nouvelleCle = uuid.v4(); // Générer une nouvelle clé API UUID
@@ -72,6 +74,7 @@ Utilisateur.cree_Cle = (req, res) => {
     });
 };
 
+// Fonction pour valider une clé API
 Utilisateur.trouve_Util = (req, res) => {
     return new Promise((resolve, reject) => {
         let requete = 'SELECT * FROM utilisateur WHERE courriel = $1';
@@ -86,6 +89,8 @@ Utilisateur.trouve_Util = (req, res) => {
     });
 };
 
+
+// Fonction pour valider une clé API
 Utilisateur.cherche_Cle = (req, res) => {
     return new Promise((resolve, reject) => {
         let requete = 'SELECT * FROM utilisateur WHERE cle_api = $1';
@@ -100,6 +105,7 @@ Utilisateur.cherche_Cle = (req, res) => {
     });
 };
 
+// Fonction pour valider une clé API
 Utilisateur.valide_Cle = (cleApi) => {
     return new Promise((resolve, reject) => {
         let requete = 'SELECT * FROM utilisateur WHERE cle_api = $1';
@@ -114,6 +120,7 @@ Utilisateur.valide_Cle = (cleApi) => {
     });
 };
 
+// Fonction pour valider une clé API
 Utilisateur.verifCombinaison = (req, res) => {
     return new Promise((resolve, reject) => {
         let requete = 'SELECT * FROM utilisateur WHERE courriel = $1';
@@ -128,6 +135,7 @@ Utilisateur.verifCombinaison = (req, res) => {
     });
 };
 
+// Fonction pour valider une clé API
 Utilisateur.regenerer_Cle = (req, res) => {
     return new Promise((resolve, reject) => {
         let nouvelleCle = uuid.v4(); // Générer une nouvelle clé API UUID
