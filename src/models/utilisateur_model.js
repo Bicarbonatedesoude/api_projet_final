@@ -18,19 +18,31 @@ Utilisateur.ajouter_Util = (req) => {
             if (err) {
                 reject(err);
             } else {
-                let requete = 'INSERT INTO utilisateur (nom, courriel, cle_api, password) VALUES ($1, $2, $3, $4)';
-                let params = [req.body.nom, req.body.courriel, req.body.cle_api, hash];
+                // Générer une clé API (s'il doit être généré automatiquement)
+                const cleApi = generateUniqueAPIKey(); // Fonction à implémenter
+
+                // Exécuter la requête SQL pour insérer un nouvel utilisateur
+                const requete = 'INSERT INTO utilisateur (nom, courriel, cle_api, password) VALUES ($1, $2, $3, $4)';
+                const params = [req.body.nom, req.body.courriel, cleApi, hash];
+
                 sql.query(requete, params, (err, data) => {
                     if (err) {
                         reject(err);
                     } else {
-                        resolve(data.rows);
+                        resolve(data.rows); 
                     }
                 });
             }
         });
     });
 };
+
+// Fonction pour générer une clé API unique
+function generateUniqueAPIKey() {
+    let cle = uuid.v4(); // Générer une nouvelle clé API UUID
+    return cle; 
+}
+
 
 Utilisateur.verifUtilisateur = (req, res) => {
     return new Promise((resolve, reject) => {
