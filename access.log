@@ -1,0 +1,1 @@
+::1 - - [13/May/2024:18:59:39 +0000] "GET /api/users/cle HTTP/1.1" 500 1634 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"

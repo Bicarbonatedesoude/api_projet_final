@@ -1,12 +1,11 @@
 
 
-const bd = require('../.src/config/db_pg.js');
+const bd = require('../config/db_pg.js');
 
 module.exports = {};
 
 const Tache = function(tache) {
     this.utilisateur_id = tache.utilisateur_id;
-    this.titre = tache.titre;
     this.description = tache.description;
     this.date_debut = tache.date_debut;
     this.date_echeance = tache.date_echeance;
@@ -15,8 +14,9 @@ const Tache = function(tache) {
 
 Tache.creerTache = (req, id) => {
     return new Promise((resolve, reject) => {
-        let requete = 'INSERT INTO tache(utilisateur_id, titre, description, date_debut, date_echeance, complete) VALUES ($1, $2, $3, $4, $5, $6);';
-        let params = [id, req.body.titre, req.body.description, req.body.date_debut, req.body.date_echeance, req.body.complete];
+        const { description, date_debut, date_echeance, complete } = req.body;
+        const requete = 'INSERT INTO taches(utilisateur_id, description, date_debut, date_echeance, complete) VALUES ($1, $2, $3, $4, $5);';
+        const params = [id, description, date_debut, date_echeance, complete];
         bd.query(requete, params, (err, data) => {
             if (err) {
                 reject(err);
@@ -26,6 +26,7 @@ Tache.creerTache = (req, id) => {
         });
     });
 }
+
 
 Tache.trouverToutesLesSousTaches = (id) => {
     return new Promise((resolve, reject) => {

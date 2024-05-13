@@ -9,9 +9,14 @@ module.exports = (req, res, next) => {
     }
 
     // Récupérer la clé API
-    const cleApi = req.headers.authorization.split(' ')[1];
+    // headers.authorization sert a recuperer la clé API
+    // pour verifier si clé valide ou pas 
+    // et split permet de separer la clé de l'entete 
+    // [1] permet de recuperer la clé API en gros
+     const cleApi = req.headers.authorization.split(' ')[1];
     // Vérifier si la clé API est valide
     Users.validationCle(cleApi)
+    // Si la clé API est valide, on continue le traitement
     .then(resultat => {
         if(!resultat) {
             return res.status(401).json({ message: "Clé API invalide" });

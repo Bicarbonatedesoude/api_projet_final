@@ -8,6 +8,7 @@ exports.creerSousTache = (req, res) => {
 
     // Vérifier les champs requis
     if (!tache_id || !titre || complete == null) {
+        // sinon erreur si un champ marche pas
         return res.status(400).send({
             champ_manquant: !tache_id ? "tache_id\r\n" : "",
             titre: !titre ? "titre\r\n" : "",
@@ -18,6 +19,7 @@ exports.creerSousTache = (req, res) => {
     // Vérifier si la tâche existe
     Taches.verifierUneTache(tache_id)
         .then((valeur) => {
+      // si la tache existe pas
             if (!valeur) {
                 return res.status(404).send({
                     message: `La tache ${tache_id} n'existe pas`
@@ -25,7 +27,7 @@ exports.creerSousTache = (req, res) => {
             }
 
             // Vérifier si la tâche appartient à l'utilisateur
-            Taches.verifierCle(req.headers.authorization.split(' ')[1], tache_id)
+            Taches.verifierCle(req.headers.authorization, tache_id)
                 .then((cle) => {
                     if (!cle) {
                         return res.status(403).send({
@@ -78,6 +80,7 @@ exports.creerSousTache = (req, res) => {
         });
 };
 
+// Fonction pour récupérer toutes les sous-tâches
 exports.trouvelesSousTaches = (req, res) => {
     sous_tache.find()
         .then((sousTaches) => {
@@ -90,6 +93,7 @@ exports.trouvelesSousTaches = (req, res) => {
         });
 };
 
+// Fonction pour récupérer une sous-tâche
 exports.trouve1SousTache = (req, res) => {
     sous_tache.findById(req.params.id)
         .then((sousTache) => {
@@ -108,7 +112,7 @@ exports.trouve1SousTache = (req, res) => {
         });
 };
 
-
+// Fonction pour modifier une sous-tâche
 exports.modif1SousTache = (req, res) => {
     const { titre, complete } = req.body;
     const sousTacheId = req.params.id;
@@ -132,7 +136,8 @@ exports.modif1SousTache = (req, res) => {
             }
 
             // Vérifier si la tâche appartient à l'utilisateur
-            verifierCle(req.headers.authorization.split(' ')[1], sousTacheId)
+            // headers.authorization sert a recuperer la clé API
+            verifierCle(req.headers.authorization, sousTacheId)
                 .then((cle) => {
                     if (!cle) {
                         return res.status(403).send({
@@ -172,7 +177,7 @@ exports.modif1SousTache = (req, res) => {
 };
 
 
-
+// Fonction pour modifier le statut d'une sous-tâche
 exports.modifStatSousTache = (req, res) => {
     const { complete } = req.body;
     const sousTacheId = req.params.id;
@@ -195,7 +200,7 @@ exports.modifStatSousTache = (req, res) => {
             }
 
             // Vérifier si la tâche appartient à l'utilisateur
-            verifierCle(req.headers.authorization.split(' ')[1], sousTacheId)
+            verifierCle(req.headers.authorization, sousTacheId)
                 .then((cle) => {
                     if (!cle) {
                         return res.status(403).send({
@@ -235,6 +240,7 @@ exports.modifStatSousTache = (req, res) => {
 };
 
 
+// Fonction pour supprimer une sous-tâche
 exports.supSousTache = (req, res) => {
         const sousTacheId = req.params.id;
     
@@ -248,7 +254,7 @@ exports.supSousTache = (req, res) => {
                 }
     
                 // Vérifier si la tâche appartient à l'utilisateur
-                verifierCle(req.headers.authorization.split(' ')[1], sousTacheId)
+                verifierCle(req.headers.authorization, sousTacheId)
                     .then((cle) => {
                         if (!cle) {
                             return res.status(403).send({

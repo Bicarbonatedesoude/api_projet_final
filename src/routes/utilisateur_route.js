@@ -7,10 +7,13 @@ router.post('/', (req, res) => {
     ajouter_u.ajouter_Util(req, res);
     }
 );
-route.get('/verif', (req, res) => {
-    ajouter_u.verifUtilisateur(req, res);
-    }
-);
+// route.get('/verif', (req, res) => {
+//     ajouter_u.verifUtilisateur(req, res);
+//     }
+// );
+router.post('/cle_rege', (req, res) => {
+    ajouter_u.regenerer_Cle(req, res);
+});
 
 router.post('/cle', (req, res) => {
     ajouter_u.cree_Cle(req, res);

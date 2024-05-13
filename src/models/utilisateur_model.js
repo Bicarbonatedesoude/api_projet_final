@@ -1,13 +1,12 @@
-
 const sql = require('../config/db_pg.js');
 const bcrypt = require('bcrypt');
+const uuid = require('uuid'); // Importer uuid pour générer une clé API unique
+
 const costFactor = 10;
-const uuidv4 = require('uuid/v4');
 
 const Utilisateur = function(utilisateur) {
     this.id = utilisateur.id;
     this.nom = utilisateur.nom;
-    this.prenom = utilisateur.prenom;
     this.courriel = utilisateur.courriel;
     this.cle_api = utilisateur.cle_api;
     this.password = utilisateur.password;
@@ -19,8 +18,8 @@ Utilisateur.ajouter_Util = (req) => {
             if (err) {
                 reject(err);
             } else {
-                let requete = 'INSERT INTO utilisateur (nom, prenom, courriel, cle_api, password) VALUES ($1, $2, $3, $4, $5)';
-                let params = [req.body.nom, req.body.prenom, req.body.courriel, req.body.cle_api, hash];
+                let requete = 'INSERT INTO utilisateur (nom, courriel, cle_api, password) VALUES ($1, $2, $3, $4)';
+                let params = [req.body.nom, req.body.courriel, req.body.cle_api, hash];
                 sql.query(requete, params, (err, data) => {
                     if (err) {
                         reject(err);
@@ -31,8 +30,7 @@ Utilisateur.ajouter_Util = (req) => {
             }
         });
     });
-}
-
+};
 
 Utilisateur.verifUtilisateur = (req, res) => {
     return new Promise((resolve, reject) => {
@@ -45,13 +43,13 @@ Utilisateur.verifUtilisateur = (req, res) => {
             }
         });
     });
-}
-
+};
 
 Utilisateur.cree_Cle = (req, res) => {
     return new Promise((resolve, reject) => {
-        let requete = 'UPDATE utilisateur SET cle_api = ? WHERE courriel = $1';
-        let params = [uuidv4(), req.body.courriel];
+        let nouvelleCle = uuid.v4(); // Générer une nouvelle clé API UUID
+        let requete = 'UPDATE utilisateur SET cle_api = $1 WHERE courriel = $2';
+        let params = [nouvelleCle, req.body.courriel];
         sql.query(requete, params, (err, data) => {
             if (err) {
                 reject(err);
@@ -59,30 +57,26 @@ Utilisateur.cree_Cle = (req, res) => {
                 resolve(data.rows);
             }
         });
-    }
-    );
-}
-
+    });
+};
 
 Utilisateur.trouve_Util = (req, res) => {
-    utilisateur.trouve_Util = (req, res) => {
-        return new Promise((resolve, reject) => {
-            let requete = 'SELECT * FROM utilisateur WHERE courriel = $1';
-            let params = req.body.courriel;
-            sql.query(requete, params, (err, data) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(data.rows);
-                }
-            });
+    return new Promise((resolve, reject) => {
+        let requete = 'SELECT * FROM utilisateur WHERE courriel = $1';
+        let params = req.body.courriel;
+        sql.query(requete, params, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data.rows);
+            }
         });
-    }
-}
+    });
+};
 
 Utilisateur.cherche_Cle = (req, res) => {
     return new Promise((resolve, reject) => {
-        let requete = 'SELECT * FROM utilisateur WHERE cle = $1';
+        let requete = 'SELECT * FROM utilisateur WHERE cle_api = $1';
         let params = req.body.cle_api;
         sql.query(requete, params, (err, data) => {
             if (err) {
@@ -91,11 +85,8 @@ Utilisateur.cherche_Cle = (req, res) => {
                 resolve(data.rows);
             }
         });
-    }
-    );
-}
-
-
+    });
+};
 
 Utilisateur.valide_Cle = (cleApi) => {
     return new Promise((resolve, reject) => {
@@ -109,7 +100,7 @@ Utilisateur.valide_Cle = (cleApi) => {
             }
         });
     });
-}
+};
 
 Utilisateur.verifCombinaison = (req, res) => {
     return new Promise((resolve, reject) => {
@@ -123,7 +114,21 @@ Utilisateur.verifCombinaison = (req, res) => {
             }
         });
     });
-}
+};
 
+Utilisateur.regenerer_Cle = (req, res) => {
+    return new Promise((resolve, reject) => {
+        let nouvelleCle = uuid.v4(); // Générer une nouvelle clé API UUID
+        let requete = 'UPDATE utilisateur SET cle_api = $1 WHERE courriel = $2';
+        let params = [nouvelleCle, req.body.courriel];
+        sql.query(requete, params, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data.rows);
+            }
+        });
+    });
+};
 
 module.exports = Utilisateur;

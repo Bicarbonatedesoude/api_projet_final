@@ -1,29 +1,238 @@
 {
-
-    "name": "Mes notes",
-    "description": "des notes et des sous notes",
-    "notes": [
+    "openapi": "3.1.0",
+    "info": {
+        "title": "API de gestion des tâches",
+        "description": "Documentation de l'API pour gérer les tâches utilisateur",
+        "version": "1.0.0",
+        "contact": {
+            "name": "Équipe de développement",
+            "url": "https://example.com/support",
+            "email": "support@example.com"
+        }
+    },
+    "servers": [
         {
-            "title": "Note 1",
-            "content": "Contenu de la note 1",
-            "notes": [
-                {
-                    "title": "Sous-note 1",
-                    "content": "Contenu de la sous-note 1"
-                },
-                {
-                    "title": "Sous-note 2",
-                    "content": "Contenu de la sous-note 2"
-                }
-            ]
+            "url": "http://localhost:3000",
+            "description": "Serveur de développement local"
         },
         {
-            "title": "Note 2",
-            "content": "Contenu de la note 2"
+            "url": "https://api.montresor.com",
+            "description": "Serveur de production"
         }
     ],
-    "version": "1.0.0",
-    "serveur": "http://localhost:3000/",
-    "auteur": "Moi"
-    
+    "paths": {
+        "/api/taches": {
+            "get": {
+                "summary": "Récupérer toutes les tâches",
+                "tags": ["Tâches"],
+                "responses": {
+                    "200": {
+                        "description": "Liste des tâches récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "tasks": []
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Créer une nouvelle tâche",
+                "tags": ["Tâches"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "utilisateur_id": {
+                                        "type": "string",
+                                        "description": "ID de l'utilisateur associé à la tâche"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Description de la tâche"
+                                    },
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Date de début de la tâche (format ISO 8601)"
+                                    },
+                                    "date_echeance": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Date d'échéance de la tâche (format ISO 8601)"
+                                    },
+                                    "complete": {
+                                        "type": "boolean",
+                                        "description": "Statut de complétude de la tâche"
+                                    }
+                                },
+                                "required": ["utilisateur_id", "description", "date_debut", "date_echeance", "complete"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tâche créée avec succès",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Tâche créée avec succès",
+                                    "task": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/taches/{id}": {
+            "get": {
+                "summary": "Récupérer une tâche par ID",
+                "tags": ["Tâches"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la tâche à récupérer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tâche récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "task": {}
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tâche non trouvée"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Modifier une tâche par ID",
+                "tags": ["Tâches"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la tâche à modifier",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Description mise à jour de la tâche"
+                                    },
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Nouvelle date de début de la tâche (format ISO 8601)"
+                                    },
+                                    "date_echeance": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "description": "Nouvelle date d'échéance de la tâche (format ISO 8601)"
+                                    },
+                                    "complete": {
+                                        "type": "boolean",
+                                        "description": "Nouveau statut de complétude de la tâche"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tâche modifiée avec succès",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Tâche modifiée avec succès",
+                                    "task": {}
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tâche non trouvée"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Supprimer une tâche par ID",
+                "tags": ["Tâches"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la tâche à supprimer",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tâche supprimée avec succès"
+                    },
+                    "404": {
+                        "description": "Tâche non trouvée"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Task": {
+                "type": "object",
+                "properties": {
+                    "utilisateur_id": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "date_debut": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "date_echeance": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "complete": {
+                        "type": "boolean"
+                    }
+                },
+                "required": ["utilisateur_id", "description", "date_debut", "date_echeance", "complete"]
+            }
+        }
+    }
 }

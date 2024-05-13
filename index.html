@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Utilisateur</title>
+</head>
+<body>
+    <h2>Créer un nouvel utilisateur</h2>
+    <form id="createUserForm">
+        <label for="nom">Nom:</label>
+        <input type="text" id="nom" name="nom" required><br><br>
+        <label for="courriel">Courriel:</label>
+        <input type="email" id="courriel" name="courriel" required><br><br>
+        <label for="password">Mot de passe:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="submit">Créer Utilisateur</button>
+    </form>
+
+    <hr>
+
+    <h2>Générer une clé API</h2>
+    <form id="generateApiKeyForm">
+        <label for="courrielCle">Courriel:</label>
+        <input type="email" id="courrielCle" name="courrielCle" required><br><br>
+        <label for="passwordCle">Mot de passe:</label>
+        <input type="password" id="passwordCle" name="passwordCle" required><br><br>
+        <button type="submit">Générer Clé API</button>
+    </form>
+
+    <script>
+        document.getElementById('createUserForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const nom = document.getElementById('nom').value;
+            const courriel = document.getElementById('courriel').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nom, courriel, password })
+                });
+
+                const data = await response.json();
+                alert(data.message);
+            } catch (error) {
+                console.error('Erreur lors de la création de l\'utilisateur :', error);
+                alert('Une erreur est survenue lors de la création de l\'utilisateur.');
+            }
+        });
+
+        document.getElementById('generateApiKeyForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const courriel = document.getElementById('courrielCle').value;
+            const password = document.getElementById('passwordCle').value;
+
+            try {
+                const response = await fetch('/api/users/cle_rege', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ courriel, password })
+                });
+
+                const data = await response.json();
+                alert(data.message);
+            } catch (error) {
+                console.error('Erreur lors de la génération de la clé API :', error);
+                alert('Une erreur est survenue lors de la génération de la clé API.');
+            }
+        });
+    </script>
+</body>
+</html>
